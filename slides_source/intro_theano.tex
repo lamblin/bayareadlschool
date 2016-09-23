@@ -69,13 +69,6 @@ September 25th, 2016, Stanford
 
 \end{frame}
 
-
-\section{Overview}
-\begin{frame}
-  \tableofcontents[currentsection]
-\end{frame}
-
-
 \begin{frame}{Theano vision}
 
   Mathematical symbolic expression compiler
@@ -133,6 +126,10 @@ September 25th, 2016, Stanford
 
 
 \section{Symbolic expressions}
+\begin{frame}
+  \tableofcontents[currentsection]
+\end{frame}
+
 \begin{frame}{Overview}
   Theano defines a {\bf language}, a {\bf compiler}, and a {\bf library}.
   \begin{itemize}
@@ -170,6 +167,8 @@ b_val = np.ones(3)
 
 W = theano.shared(W_val)
 b = theano.shared(b_val)
+W.name = 'W'
+b.name = 'b'
   \end{minted}
   \begin{itemize}
     \item Symbolic variables, with a \textbf{value} associated to them
@@ -342,47 +341,49 @@ print(b.get_value())
 
 \end{frame}
 
+\subsection{Graph visualization}
+\begin{frame}{\texttt{pydotprint(out)}}
+    \center
+    \includegraphics[height=0.9\textheight]{pydotprint_out.pdf}
+\end{frame}
 
-\begin{frame}[fragile]{Graph visualization (1)}
-  \begin{verbatim}
-debugprint(dot)
-dot [id A] ''   
- |x [id B]
- |W [id C]
+\begin{frame}{\texttt{pydotprint(predict)}}
+    \center
+    \includegraphics[width=\textwidth]{pydotprint_predict.pdf}
+\end{frame}
 
+\begin{frame}{\texttt{pydotprint([upd\_W, upd\_b])}}
+    \center
+    \includegraphics[height=0.9\textheight]{pydotprint_upd.pdf}
+\end{frame}
+
+\begin{frame}{\texttt{pydotprint(train)}}
+    \center
+    \includegraphics[width=\textwidth]{pydotprint_train.pdf}
+\end{frame}
+
+
+\begin{frame}[fragile]{\texttt{debugprint}}
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+    \footnotesize
+      \begin{verbatim}
 debugprint(out)
+
 sigmoid [id A] ''   
  |Elemwise{add,no_inplace} [id B] ''   
    |dot [id C] ''   
    | |x [id D]
    | |W [id E]
    |b [id F]
-  \end{verbatim}
-\end{frame}
-
-\begin{frame}[fragile]{Graph visualization (2)}
-  \begin{columns}
-    \begin{column}{0.48\textwidth}
-\footnotesize
-      \begin{verbatim}
-theano.printing.debugprint(f)
-CGemv{inplace} [id A] ''   3
- |AllocEmpty{dtype='float64'} [id B] ''   2
- | |Shape_i{1} [id C] ''   1
- |   |W [id D]
- |TensorConstant{1.0} [id E]
- |InplaceDimShuffle{1,0} [id F] 'W.T'   0
- | |W [id D]
- |x [id G]
- |TensorConstant{0.0} [id H]
-
-theano.printing.pydotprint(f)
       \end{verbatim}
     \end{column}
-    \begin{column}{0.48\textwidth}
-\footnotesize
+
+    \begin{column}{0.50\textwidth}
+    \footnotesize
       \begin{verbatim}
-theano.printing.debugprint(g)
+debugprint(predict)
+
 Elemwise{ScalarSigmoid}[(0, 0)] [id A] ''   2
  |CGemv{no_inplace} [id B] ''   1
    |b [id C]
@@ -391,35 +392,71 @@ Elemwise{ScalarSigmoid}[(0, 0)] [id A] ''   2
    | |W [id F]
    |x [id G]
    |TensorConstant{1.0} [id D]
-
-theano.printing.pydotprint(g)
       \end{verbatim}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{\tt pydotprint(f)}
-    \includegraphics[width=\textwidth]{pydotprint_f.pdf}
-\end{frame}
-\begin{frame}{\tt pydotprint(g)}
-    \includegraphics[width=\textwidth]{pydotprint_g.pdf}
-\end{frame}
-\begin{frame}{\tt pydotprint(h)}
-    \includegraphics[width=\textwidth]{pydotprint_h.pdf}
-\end{frame}
-
-\begin{frame}[fragile]{\tt d3viz}
-
-{\tt d3viz} enables interactive visualization of graphs in a web browser
-
-  \begin{minted}{python}
-from theano.d3viz import d3viz
-
-d3viz(f, './d3viz_f.html')
-d3viz(g, './d3viz_g.html')
-d3viz(h, './d3viz_h.html')
-  \end{minted}
-\end{frame}
+%\begin{frame}[fragile]{Graph visualization (2)}
+%  \begin{columns}
+%    \begin{column}{0.48\textwidth}
+%\footnotesize
+%      \begin{verbatim}
+%theano.printing.debugprint(f)
+%CGemv{inplace} [id A] ''   3
+% |AllocEmpty{dtype='float64'} [id B] ''   2
+% | |Shape_i{1} [id C] ''   1
+% |   |W [id D]
+% |TensorConstant{1.0} [id E]
+% |InplaceDimShuffle{1,0} [id F] 'W.T'   0
+% | |W [id D]
+% |x [id G]
+% |TensorConstant{0.0} [id H]
+%
+%theano.printing.pydotprint(f)
+%      \end{verbatim}
+%    \end{column}
+%    \begin{column}{0.48\textwidth}
+%\footnotesize
+%      \begin{verbatim}
+%theano.printing.debugprint(g)
+%Elemwise{ScalarSigmoid}[(0, 0)] [id A] ''   2
+% |CGemv{no_inplace} [id B] ''   1
+%   |b [id C]
+%   |TensorConstant{1.0} [id D]
+%   |InplaceDimShuffle{1,0} [id E] 'W.T'   0
+%   | |W [id F]
+%   |x [id G]
+%   |TensorConstant{1.0} [id D]
+%
+%theano.printing.pydotprint(g)
+%      \end{verbatim}
+%    \end{column}
+%  \end{columns}
+%\end{frame}
+%
+%\begin{frame}{\tt pydotprint(f)}
+%    \includegraphics[width=\textwidth]{pydotprint_f.pdf}
+%\end{frame}
+%\begin{frame}{\tt pydotprint(g)}
+%    \includegraphics[width=\textwidth]{pydotprint_g.pdf}
+%\end{frame}
+%\begin{frame}{\tt pydotprint(h)}
+%    \includegraphics[width=\textwidth]{pydotprint_h.pdf}
+%\end{frame}
+%
+%\begin{frame}[fragile]{\tt d3viz}
+%
+%{\tt d3viz} enables interactive visualization of graphs in a web browser
+%
+%  \begin{minted}{python}
+%from theano.d3viz import d3viz
+%
+%d3viz(f, './d3viz_f.html')
+%d3viz(g, './d3viz_g.html')
+%d3viz(h, './d3viz_h.html')
+%  \end{minted}
+%\end{frame}
 
 %\begin{frame}[fragile]{Executing a Theano function}
 %  Call it with numeric values
@@ -447,34 +484,34 @@ d3viz(h, './d3viz_h.html')
 %  \end{minted}
 %\end{frame}
 
-\section{Graph definition and Syntax}
-\begin{frame}
-  \tableofcontents[currentsection]
-\end{frame}
-
-\subsection{Graph structure}
-\begin{frame}[fragile]{Graph structure}
-  The graph that represents mathematical operations is {\bf bipartite},
-  and has two sorts of nodes:
-  \begin{itemize}
-    \item \verb|Variable| nodes, or variables, that represent {\em data}
-    \item \verb|Apply| nodes, that represent the application of
-      {\em mathematical operations}
-  \end{itemize}
-  In practice:
-  \begin{itemize}
-    \item Variables are used for the graph inputs and outputs, and intermediate values
-    \item Variables will hold data during the function execution phase
-    \item An Apply node has inputs and outputs, which are variables
-    \item An Apply node represents the specific application of an Op on these input variables
-    \item The same variable can be used as inputs by several Apply nodes
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \center
-  \includegraphics[width=0.6\textwidth]{apply.pdf}
-\end{frame}
+%\section{Graph definition and Syntax}
+%\begin{frame}
+%  \tableofcontents[currentsection]
+%\end{frame}
+%
+%\subsection{Graph structure}
+%\begin{frame}[fragile]{Graph structure}
+%  The graph that represents mathematical operations is {\bf bipartite},
+%  and has two sorts of nodes:
+%  \begin{itemize}
+%    \item \verb|Variable| nodes, or variables, that represent {\em data}
+%    \item \verb|Apply| nodes, that represent the application of
+%      {\em mathematical operations}
+%  \end{itemize}
+%  In practice:
+%  \begin{itemize}
+%    \item Variables are used for the graph inputs and outputs, and intermediate values
+%    \item Variables will hold data during the function execution phase
+%    \item An Apply node has inputs and outputs, which are variables
+%    \item An Apply node represents the specific application of an Op on these input variables
+%    \item The same variable can be used as inputs by several Apply nodes
+%  \end{itemize}
+%\end{frame}
+%
+%\begin{frame}
+%  \center
+%  \includegraphics[width=0.6\textwidth]{apply.pdf}
+%\end{frame}
 
 %\begin{frame}{\tt pydotprint(f, compact=False)}
 %    \includegraphics[width=\textwidth]{pydotprint_f_notcompact.pdf}
@@ -514,102 +551,101 @@ d3viz(h, './d3viz_h.html')
 %  \end{minted}
 %\end{frame}
 
-\subsection{Differences from Python/NumPy}
-\begin{frame}[fragile]{No side effects}
-  Create new variables, cannot \emph{change} them
-  \begin{itemize}
-    \item \verb|a += 1| works, returns new variable and re-assign
-    \item \verb|a[:] += 1|, or \verb|a[:] = 0| do \textbf{not} work
-      (the \verb|__setitem__| method cannot return a new object)
-    \item \verb|a = T.inc_subtensor(a[:], 1)| or \verb|a = T.set_subtensor(a[:], 0)|
-    \item This will create a new variable, and re-assign a to it
-    \item Theano will figure out later if it can use an in-place version
-  \end{itemize}
-  Exceptions:
-  \begin{itemize}
-    \item The \verb|Print()| Op
-    \item The \verb|Assert()| Op
-    \item You have to re-assign (or use the returned value)
-    \item These can disrupt some optimizations
-      %TODO: example
-  \end{itemize}
-\end{frame}
+%%% ???
+%\subsection{Differences from Python/NumPy}
+%\begin{frame}[fragile]{No side effects}
+%  Create new variables, cannot \emph{change} them
+%  \begin{itemize}
+%    \item \verb|a += 1| works, returns new variable and re-assign
+%    \item \verb|a[:] += 1|, or \verb|a[:] = 0| do \textbf{not} work
+%      (the \verb|__setitem__| method cannot return a new object)
+%    \item \verb|a = T.inc_subtensor(a[:], 1)| or \verb|a = T.set_subtensor(a[:], 0)|
+%    \item This will create a new variable, and re-assign a to it
+%    \item Theano will figure out later if it can use an in-place version
+%  \end{itemize}
+%  Exceptions:
+%  \begin{itemize}
+%    \item The \verb|Print()| Op
+%    \item The \verb|Assert()| Op
+%    \item You have to re-assign (or use the returned value)
+%    \item These can disrupt some optimizations
+%      %TODO: example
+%  \end{itemize}
+%\end{frame}
+%
+%\begin{frame}[fragile]{Python keywords}
+%  We cannot redefine Python's keywords: they affect the flow when building the graph, not when executing it.
+%  \begin{itemize}
+%    \item \verb|if var:| will always evaluate to \verb|True|.
+%      Use \verb|theano.ifelse.ifelse(var, expr1, expr2)|
+%    \item \verb|for i in var:| will not work if \verb|var| is symbolic.
+%      If \verb|var| is numeric: loop unrolling. You can use \verb|theano.scan|.
+%    \item \verb|len(var)| cannot return a symbolic shape, you can use
+%      \verb|var.shape[0]|
+%    \item \verb|print| will print an identifier for the symbolic variable,
+%      there is a \verb|Print()| operation
+%  \end{itemize}
+%\end{frame}
 
-\begin{frame}[fragile]{Python keywords}
-  We cannot redefine Python's keywords: they affect the flow when building the graph, not when executing it.
-  \begin{itemize}
-    \item \verb|if var:| will always evaluate to \verb|True|.
-      Use \verb|theano.ifelse.ifelse(var, expr1, expr2)|
-    \item \verb|for i in var:| will not work if \verb|var| is symbolic.
-      If \verb|var| is numeric: loop unrolling. You can use \verb|theano.scan|.
-    \item \verb|len(var)| cannot return a symbolic shape, you can use
-      \verb|var.shape[0]|
-    \item \verb|print| will print an identifier for the symbolic variable,
-      there is a \verb|Print()| operation
-  \end{itemize}
-\end{frame}
+%%% ???
+%\section{Graph Transformations}
+%\begin{frame}
+%  \tableofcontents[currentsection]
+%\end{frame}
+%
+%\subsection{Substitution and Cloning}
+%\begin{frame}[fragile]{The {\tt givens} keyword}
+%  With the variables defined earlier:
+%  \begin{minted}{python}
+%x = T.vector('x')
+%W = T.matrix('W')
+%b = T.vector('b')
+%dot = T.dot(x, W)
+%out = T.nnet.sigmoid(dot + b)
+%  \end{minted}
+%
+%  Substitution at the last moment, when compiling a function
+%  \begin{minted}{python}
+%x_ = T.vector('x_')
+%x_n = (x_ - x_.mean()) / x_.std()
+%f_n = theano.function([x_, W], dot, givens={x: x_n})
+%f_n(x_val, W_val)
+%# -> array([ 1.90651511,  0.60431744, -0.64253361])
+%  \end{minted}
+%\end{frame}
+%
+%\begin{frame}[fragile]{Cloning with replacement}
+%  Useful when building the expression graph
+%  \begin{minted}{python}
+%dot_n, out_n = theano.clone(
+%    [dot, out],
+%    replace={x: (x - x.mean()) / x.std()})
+%f_n = theano.function([x, W], dot_n)
+%f_n(x_val, W_val)
+%# -> array([ 1.90651511,  0.60431744, -0.64253361])
+%  \end{minted}
+%\end{frame}
 
 
-\section{Graph Transformations}
-\begin{frame}
-  \tableofcontents[currentsection]
-\end{frame}
-
-\subsection{Substitution and Cloning}
-\begin{frame}[fragile]{The {\tt givens} keyword}
-  With the variables defined earlier:
-  \begin{minted}{python}
-x = T.vector('x')
-W = T.matrix('W')
-b = T.vector('b')
-dot = T.dot(x, W)
-out = T.nnet.sigmoid(dot + b)
-  \end{minted}
-
-  Substitution at the last moment, when compiling a function
-  \begin{minted}{python}
-x_ = T.vector('x_')
-x_n = (x_ - x_.mean()) / x_.std()
-f_n = theano.function([x_, W], dot, givens={x: x_n})
-f_n(x_val, W_val)
-# -> array([ 1.90651511,  0.60431744, -0.64253361])
-  \end{minted}
-\end{frame}
-
-\begin{frame}[fragile]{Cloning with replacement}
-  Useful when building the expression graph
-  \begin{minted}{python}
-dot_n, out_n = theano.clone(
-    [dot, out],
-    replace={x: (x - x.mean()) / x.std()})
-f_n = theano.function([x, W], dot_n)
-f_n(x_val, W_val)
-# -> array([ 1.90651511,  0.60431744, -0.64253361])
-  \end{minted}
-\end{frame}
-
-\subsection{Gradient}
-
-
-\begin{frame}{\tt pydotprint(cost\_and\_upd)}
-  \includegraphics[width=\textwidth]{pydotprint_cost_and_upd.pdf}
-\end{frame}
-
-\subsection{Shared variables}
-\begin{frame}[fragile]{Update values}
-  Simple ways to update values
-  \begin{minted}{python}
-C_val, dC_dW_val, dC_db_val = cost_and_grads(x_val, W_val, b_val, y_val)
-W_val -= 0.1 * dC_dW_val
-b_val -= 0.1 * dC_db_val
-
-C_val, W_val, b_val = cost_and_upd(x_val, W_val, b_val, y_val)
-  \end{minted}
-  \begin{itemize}
-    \item Cumbersome
-    \item Inefficient: memory, GPU transfers
-  \end{itemize}
-\end{frame}
+%\begin{frame}{\tt pydotprint(cost\_and\_upd)}
+%  \includegraphics[width=\textwidth]{pydotprint_cost_and_upd.pdf}
+%\end{frame}
+%
+%\subsection{Shared variables}
+%\begin{frame}[fragile]{Update values}
+%  Simple ways to update values
+%  \begin{minted}{python}
+%C_val, dC_dW_val, dC_db_val = cost_and_grads(x_val, W_val, b_val, y_val)
+%W_val -= 0.1 * dC_dW_val
+%b_val -= 0.1 * dC_db_val
+%
+%C_val, W_val, b_val = cost_and_upd(x_val, W_val, b_val, y_val)
+%  \end{minted}
+%  \begin{itemize}
+%    \item Cumbersome
+%    \item Inefficient: memory, GPU transfers
+%  \end{itemize}
+%\end{frame}
 
 %\begin{frame}{Shared variables}
 %  \begin{itemize}
@@ -667,51 +703,51 @@ C_val, W_val, b_val = cost_and_upd(x_val, W_val, b_val, y_val)
 %\end{frame}
 
 
-\section{Make it fast!}
+\section{Optimized execution}
 \begin{frame}
   \tableofcontents[currentsection]
 \end{frame}
-\subsection{Optimizations}
 
-\subsection{Code Generation}
-\begin{frame}[fragile]{C code for Ops}
+\subsection{Code generation and execution}
+\begin{frame}[fragile]{Code generation and execution}
+  Code generation for Ops:
   \begin{itemize}
-    \item Each operator can define C code computing the outputs given the inputs
+    \item Ops can define C++/CUDA code computing its output values
+    \item Dynamic code generation is possible
+      \begin{itemize}
+        \item For instance, loop fusion for arbitrary sequence of element-wise operations
+      \end{itemize}
+    \item Code gets compiled into a Python module, cached, and imported
     \item Otherwise, fall back to a Python implementation
   \end{itemize}
-  How does this work?
+
+  Code execution through a runtime environment, or VM:
   \begin{itemize}
-    \item In Python, build a string representing the C code for a Python module
-    \begin{itemize}
-      \item Stitching together code to extract data from Python structure,
-      \item Takes into account input and output types (ndim, dtype, \ldots)
-      \item String substitution for names of variables
-    \end{itemize}
-    \item That module is compiled by \verb|g++|
-    \item The compiled module gets imported in Python
-    \item Versioned cache of generated and compiled C code
+    \item Calls the functions performing computation for the Ops
+    \item Deals with ordering constraints, lazy execution
+    \item A C++ implementation (CVM) to avoid context switches
+      (in/out of the Python interpreter)
   \end{itemize}
-  For GPU code, same process, using CUDA and \verb|nvcc| instead.
 \end{frame}
 
-\begin{frame}[fragile]{The C virtual machine (CVM)}
-  A runtime environment, or VM, that calls the functions performing
-  computation of different parts of the function (from inputs to
-  outputs)
-  \begin{itemize}
-    \item Avoids context switching between C and Python
-    \item Data structure containing
-      \begin{itemize}
-        \item Addresses of inputs and outputs of all nodes (intermediate values)
-        \item Ordering constraints
-        \item Pointer to functions performing the computations
-        \item Information on what has been computed, and needs to be computed
-      \end{itemize}
-    \item Set in advance from Python when compiling a function
-    \item At runtime, if all operations have C code, calling the pointers will be fast
-    \item Also enables lazy evaluation (for \verb|ifelse| for instance)
-  \end{itemize}
-\end{frame}
+%\begin{frame}[fragile]{The C virtual machine (CVM)}
+%  A runtime environment, or VM, that calls the functions performing
+%  computation of different parts of the function (from inputs to
+%  outputs)
+%  \begin{itemize}
+%    \item Avoids context switching between C and Python
+%    \item Data structure containing
+%      \begin{itemize}
+%        \item Addresses of inputs and outputs of all nodes (intermediate values)
+%        \item Ordering constraints
+%        \item Pointer to functions performing the computations
+%        \item Information on what has been computed, and needs to be computed
+%      \end{itemize}
+%    \item Set in advance from Python when compiling a function
+%    \item At runtime, if all operations have C code, calling the pointers will be fast
+%    \item Also enables lazy evaluation (for \verb|ifelse| for instance)
+%  \end{itemize}
+%\end{frame}
 
 \subsection{GPU}
 \begin{frame}[fragile]{Using the GPU}
@@ -720,41 +756,35 @@ C_val, W_val, b_val = cost_and_upd(x_val, W_val, b_val, y_val)
   Theano features a new GPU back-end, with
   \begin{itemize}
     \item More dtypes, not only \verb|float32|
+    \item Experimental support for \verb|'float16'| for storage
     \item Easier interaction with GPU arrays from Python
     \item Multiple GPUs and multiple streams
-    \item \textbf{In the development version only, not the 0.8.2 release}
+    \item \textbf{In the development version only, and future 0.9 release}
   \end{itemize}
 
   Select GPU by setting the \verb|device| flag to \verb|'cuda'| or \verb|'cuda{0,1,2,...}'|.
   \begin{itemize}
     \item All {\bf shared} variables will be created in GPU memory
     \item Enables optimizations moving supported operations to GPU
-  \end{itemize}
-  You want to make sure to use float32 for speed
-  \begin{itemize}
-    \item \verb|'floatX'| is the default type of all tensors and sparse matrices.
-    \item By default, aliased to \verb|'float64'| for double precision on CPU
-    \item Can be set to \verb|'float32'| by a configuration flag
-    \item You can always explicitly use \verb|T.fmatrix()| or \verb|T.matrix(dtype='float32')|
-    \item Experimental support for \verb|'float16'| on some GPUs
+    \item You want to make sure to use float32 for speed
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Configuration flags}
   Configuration flags can be set in a couple of ways:
   \begin{itemize}
-    \item \verb|THEANO_FLAGS=device=cuda0,floatX=float32| in the shell
-    \item In Python:
-      \begin{minted}{python}
-theano.config.device = 'cuda0'
-theano.config.floatX = 'float32'
-      \end{minted}
     \item In the \verb|.theanorc| configuration file:
       \begin{minted}{text}
 [global]
 device = cuda0
 floatX = float32
       \end{minted}
+    \item \verb|THEANO_FLAGS=device=cuda0,floatX=float32| in the shell
+    \item In Python:
+      \begin{minted}{python}
+theano.config.floatX = 'float32'
+      \end{minted}
+      (\verb|theano.config.device| cannot be set once Theano is imported)
   \end{itemize}
 \end{frame}
 
@@ -764,8 +794,8 @@ floatX = float32
   \tableofcontents[currentsection]
 \end{frame}
 
-\subsection{Looping: the {\tt scan} operation}
-\begin{frame}[fragile]{Overview of {\tt scan}}
+\subsection{Looping: the \texttt{scan} operation}
+\begin{frame}[fragile]{Overview of \texttt{scan}}
   Symbolic looping
   \begin{itemize}
     \item Can perform map, reduce, reduce and accumulate, \ldots
@@ -776,7 +806,7 @@ floatX = float32
     \item Gradient through \verb|scan| implements backprop through time
     \item Can be transfered to GPU
   \end{itemize}
-  For more about \verb|scan|, see Fred's tutorial on Oct. 5th.
+  We will see a use of \verb|scan| in the LSTM example.
 \end{frame}
 
 \begin{frame}[fragile]{Example: Loop with accumulation}
@@ -820,51 +850,74 @@ print power(range(10), 4)
     \item Detect common sources of slowness
     \item Self-diagnostic tools
   \end{itemize}
-  There will be a demo later during this session.
 \end{frame}
 
 \subsection{Extending Theano}
 
-\begin{frame}[fragile]{The easy way: Python}
-\small
-  Easily wrap Python code, specialized library with Python bindings (PyCUDA, \ldots)
-
-  \begin{minted}{python}
-import theano
-import numpy
-from theano.compile.ops import as_op
-
-def infer_shape_numpy_dot(node, input_shapes):
-    ashp, bshp = input_shapes
-    return [ashp[:-1] + bshp[-1:]]
-
-@as_op(itypes=[theano.tensor.fmatrix, theano.tensor.fmatrix],
-       otypes=[theano.tensor.fmatrix], infer_shape=infer_shape_numpy_dot)
-def numpy_dot(a, b):
-   return numpy.dot(a, b)
-
-  \end{minted}
+\begin{frame}{Extending Theano}
+Theano can be extended in a few different ways
   \begin{itemize}
-    \item Overhead of Python call could be slow
-    \item To define the gradient, have to actually define a class deriving from \verb|Op|,
-      and define the \verb|grad| method.
+    \item Creating an Op with Python code
+      \begin{itemize}
+        \item Easy, using Python bindings for specialized libraries (PyCUDA, \ldots)
+        \item Some runtime overhead is possible
+        \item Example: 3D convolution using FFT on GPU
+      \end{itemize}
+    \item Creating an Op with C or CUDA code
+      \begin{itemize}
+        \item Use the C-API of Python / NumPy / GpuArray, manage refcounts
+        \item No overhead of Python function calls, or from the interpreter
+        \item C code inline or in a separate file
+        \item Example: Caffe-style convolutions, using GEMM, on CPU and GPU
+      \end{itemize}
+    \item Adding an optimization
+      \begin{itemize}
+        \item Perform additional graph simplifications
+        \item Replace part of the graph by a new optimized Op
+      \end{itemize}
   \end{itemize}
-  Has been used to implement 3D convolution using FFT on GPU
 \end{frame}
 
-\begin{frame}[fragile]{The harder way: C code}
-  \begin{itemize}
-    \item Understand the C-API of Python / NumPy / CudaNdarray
-    \item Handle arbitrary strides (or use \verb|GpuContiguous|)
-    \item Manage refcounts for Python
-    \item No overhead of Python function calls, or from the interpreter (if garbage
-      collection is disabled)
-    \item Now easier: C code in a separate file
-  \end{itemize}
-  New contributors wrote Caffe-style convolutions, using GEMM, on CPU and GPU that way.
-
-  For more about this, see Arnaud's tutorial on Sept. 28th.
-\end{frame}
+%\begin{frame}[fragile]{The easy way: Python}
+%\small
+%  Easily wrap Python code, specialized library with Python bindings (PyCUDA, \ldots)
+%
+%  \begin{minted}{python}
+%import theano
+%import numpy
+%from theano.compile.ops import as_op
+%
+%def infer_shape_numpy_dot(node, input_shapes):
+%    ashp, bshp = input_shapes
+%    return [ashp[:-1] + bshp[-1:]]
+%
+%@as_op(itypes=[theano.tensor.fmatrix, theano.tensor.fmatrix],
+%       otypes=[theano.tensor.fmatrix], infer_shape=infer_shape_numpy_dot)
+%def numpy_dot(a, b):
+%   return numpy.dot(a, b)
+%
+%  \end{minted}
+%  \begin{itemize}
+%    \item Overhead of Python call could be slow
+%    \item To define the gradient, have to actually define a class deriving from \verb|Op|,
+%      and define the \verb|grad| method.
+%  \end{itemize}
+%  Has been used to implement 3D convolution using FFT on GPU
+%\end{frame}
+%
+%\begin{frame}[fragile]{The harder way: C code}
+%  \begin{itemize}
+%    \item Understand the C-API of Python / NumPy / CudaNdarray
+%    \item Handle arbitrary strides (or use \verb|GpuContiguous|)
+%    \item Manage refcounts for Python
+%    \item No overhead of Python function calls, or from the interpreter (if garbage
+%      collection is disabled)
+%    \item Now easier: C code in a separate file
+%  \end{itemize}
+%  New contributors wrote Caffe-style convolutions, using GEMM, on CPU and GPU that way.
+%
+%  For more about this, see Arnaud's tutorial on Sept. 28th.
+%\end{frame}
 
 \subsection{New features}
 \begin{frame}[fragile]{Features recently added to Theano}
@@ -873,27 +926,23 @@ def numpy_dot(a, b):
       \begin{itemize}
         \item Arrays of all dtypes, half-precision float (\verb|float16|) for storage
         \item Support for multiple GPUs in the same function
-        \item Experimental support for OpenCL
       \end{itemize}
     \item Performance improvements
       \begin{itemize}
         \item Better interface and implementations for convolution and transposed convolution
         \item Integration of CuDNN (now v5) for 2D/3D convolutions and pooling
-        \item CNMeM and a similar allocator
+        \item CNMeM and a similar allocator for GPU memory
         \item Data-parallelism with Platoon (\url{github.com/mila-udem/platoon/})
       \end{itemize}
     \item Faster graph optimization phase
       \begin{itemize}
         \item Execution of un-optimized graph on GPU (quicker compile time)
-        \item Easier serialization/deserialization of optimized function graphs, GPU shared variables
-        \item Swapping/removing updates without recompiling
-        \item Partial evaluation of a compiled function
+        \item Various ways to avoid recompilation
       \end{itemize}
-    \item Diagnostic tools
+    \item New diagnostic tools
       \begin{itemize}
         \item Interactive visualization (d3viz)
         \item \verb|PdbBreakPoint|
-        \item Creation stack trace (in progress)
       \end{itemize}
   \end{itemize}
 \end{frame}
@@ -920,17 +969,19 @@ def numpy_dot(a, b):
           Yoshua Bengio,
           James Bergstra,
           Arnaud Bergeron,
+          Philemon Brakel,
           Olivier Breuleux,
           Pierre Luc Carrier,
+          Mathieu Germain,
           Ian Goodfellow,
+          Simon Lefrançois,
           Razvan Pascanu,
           Joseph Turian,
           David Warde-Farley,
-          Mathieu Germain,
-          Simon Lefrançois,
           and many more
       \end{itemize}
     \item Compute Canada, Calcul Québec, NSERC, the Canada Research Chairs, and CIFAR for providing funding or access to compute resources
+    \item Stanford AI Lab and the organizers of the Deep Learning School
   \end{itemize}
 \end{frame}
 
@@ -938,42 +989,44 @@ def numpy_dot(a, b):
   \uncover<1->{%
     Questions, comments, requests?
   }
-  \vspace{1cm}
+  \vspace{.5cm}
 
   \uncover<2->{%
-    \url{github.com/lamblin/ccw_tutorial/Theano_A2016/}
+    \url{github.com/lamblin/bayareadlschool/}
     \begin{itemize}
       \item Slides: {\tt intro\_theano.pdf}
-      \item Notebook with the code examples: {\tt intro\_theano.ipynb}
+      \item Companion notebook: {\tt intro\_theano.ipynb}
     \end{itemize}
   }
 
-  \vspace{1cm}
+  \vspace{.5cm}
   \uncover<3->{%
     More resources
     \begin{itemize}
       \item Documentation: \url{deeplearning.net/software/theano/}
       \item Code: \url{github.com/Theano/Theano/}
       \item Article: The Theano Development Team, ``Theano: A Python framework for fast computation of mathematical expressions'', \url{arxiv.org/abs/1605.02688}
+      \item Deep Learning Tutorials: \url{deeplearning.net/tutorial/}
     \end{itemize}
   }
 \end{frame}
 
-\begin{frame}[fragile]{Exercises}
+\begin{frame}[fragile]{Examples}
   Tutorial repository on GitHub:\\
-  \url{github.com/lamblin/ccw_tutorial/}
+  \url{github.com/lamblin/bayareadlschool/}
 
   \begin{itemize}
     \item Install the dependencies
     \item Clone the repository
       \begin{minted}[fontfamily=tt]{bash}
-git clone https://github.com/lamblin/ccw_tutorial.git
+git clone https://github.com/lamblin/bayareadlschool.git
       \end{minted}
     \item Launch the notebook
       \begin{minted}[fontfamily=tt]{bash}
-ipython notebook ccw_tutorial
+jupyter notebook bayareadlschool
       \end{minted}
-    \item Navigate to {\tt Theano\_A2016}, then {\tt exercises.ipynb}
+    \item Navigate to {\tt convnet}, then {\tt exercises.ipynb}
+    \item Navigate to {\tt lstm}, then {\tt exercises.ipynb}
   \end{itemize}
 \end{frame}
 \end{document}
