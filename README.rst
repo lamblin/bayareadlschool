@@ -142,12 +142,12 @@ First, clone this repository:
 
   $ git clone https://github.com/lamblin/bayareadlschool.git
 
-To use the IPython notebooks, you have to launch the IPython server on the
+To use the Jupyter Notebooks, you have to launch the Jupyter server on the
 base directory:
 
 .. code-block:: bash
 
-  $ ipython notebook bayareadlschool
+  $ jupyter notebook bayareadlschool
 
 A new window or tab should open in your web browser. If it does not (or if you
 want to use it in a different browser), the previous command should mention a
