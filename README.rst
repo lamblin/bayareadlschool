@@ -87,7 +87,7 @@ On Windows
 - Download graphviz from http://www.graphviz.org/Download_windows.php
 - Add to the `PATH` environment variable the directory where the
   binaries were installed, by default
-  ``C:\\Program Files (x86)\\Graphviz2.38\\bin``
+  ``C:\Program Files (x86)\Graphviz2.38\bin``
 - Then, from a terminal:
 
   .. code-block:: winbatch
@@ -116,6 +116,15 @@ install Theano for the current user.
   from the "Git Bash" terminal instead of the regular Windows command
   prompt.
 
+Fuel
+----
+
+The LSTM tutorial relies on `Fuel`_ for on-the-fly data processing.
+We install the development version of Fuel from GitHub.
+
+.. code-block:: bash
+
+  $ pip install git+git://github.com/mila-udem/fuel.git [--user]
 
 Get and run these tutorials
 ===========================
