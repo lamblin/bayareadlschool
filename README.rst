@@ -99,12 +99,14 @@ Theano
 ------
 
 There have been some improvement and bug fixes since the last release,
-so we will use the latest development version from GitHub. The following
-command installs it for the current user only:
+so we will use the latest development version from GitHub.
+
+Use ``--user`` if you installed Anaconda for all users and only want to
+install Theano for the current user.
 
 .. code-block:: bash
 
-  $ pip install git+git://github.com/Theano/Theano.git --user
+  $ pip install git+git://github.com/Theano/Theano.git [--user]
 
 .. note::
 
@@ -113,24 +115,6 @@ command installs it for the current user only:
   available in the path, then you need to run the command line above
   from the "Git Bash" terminal instead of the regular Windows command
   prompt.
-
-If you are following these instructions in advance, you may need to
-execute this command in order to get last-minute fixes:
-
-.. code-block:: bash
-
-  $ pip install --upgrade --no-deps git+git://github.com/Theano/Theano.git --user
-
-.. note::
-
-  If you install Theano for the current user only (using ``--user``),
-  command-line utilities (for instance ``theano-cache``) will not be
-  accessible from a terminal directly. You would have to add the script
-  installation directory to the ``PATH`` environment variable.
-
-  - On Mac OS and Linux, that path is ``$HOME/.local/bin`` by default.
-  - On Windows 7, that path is ``C:\\<User>\\AppData\\Roaming\\Python\\Scripts``
-    if your user name is "<User>".
 
 
 Get and run these tutorials
