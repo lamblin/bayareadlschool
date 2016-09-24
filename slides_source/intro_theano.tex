@@ -178,8 +178,9 @@ b.name = 'b'
   \end{itemize}
 \end{frame}
 
-\subsection{Defining an expression}
-\begin{frame}[fragile]{NumPy-like syntax to build expressions}
+\subsection{Defining expressions}
+\begin{frame}[fragile]{Build an expression}
+  NumPy-like syntax
   \begin{minted}{python}
 dot = T.dot(x, W)
 out = T.nnet.sigmoid(dot + b)
@@ -831,7 +832,7 @@ power = theano.function(inputs=[A, k], outputs=final_result, updates=updates)
 
 print(power(range(10), 2))
 # [  0.   1.   4.   9.  16.  25.  36.  49.  64.  81.]
-print power(range(10), 4)
+print(power(range(10), 4))
 # [  0.00000000e+00   1.00000000e+00   1.60000000e+01   8.10000000e+01
 #    2.56000000e+02   6.25000000e+02   1.29600000e+03   2.40100000e+03
 #    4.09600000e+03   6.56100000e+03]
