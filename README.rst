@@ -126,7 +126,7 @@ We install the development version of Fuel from GitHub.
 
   $ pip install git+git://github.com/mila-udem/fuel.git [--user]
 
-If the above is failed with
+If the command above failed with
 
 .. code-block:: bash
 
@@ -135,11 +135,17 @@ If the above is failed with
        library can be found by setting the ``HDF5_DIR`` environment
        variable or by using the ``--hdf5`` command-line option.
 
-try
+run the following command and try again
 
 .. code-block:: bash
 
-   $ brew install homebrew/science/hdf5
+  $ conda install h5py pytables
+
+Or, on MacOS
+
+.. code-block:: bash
+
+  $ brew install homebrew/science/hdf5
 
 
 Get and run these tutorials
