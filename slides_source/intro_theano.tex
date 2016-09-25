@@ -187,6 +187,7 @@ dot = T.dot(x, W)
 out = T.nnet.sigmoid(dot + b)
 
 C = ((out - y) ** 2).sum()
+C.name = 'C'
   \end{minted}
 
   \begin{itemize}
