@@ -126,6 +126,22 @@ We install the development version of Fuel from GitHub.
 
   $ pip install git+git://github.com/mila-udem/fuel.git [--user]
 
+If the above is failed with
+
+.. code-block:: bash
+
+       .. ERROR:: Could not find a local HDF5 installation.
+       You may need to explicitly state where your local HDF5 headers and
+       library can be found by setting the ``HDF5_DIR`` environment
+       variable or by using the ``--hdf5`` command-line option.
+
+try
+
+.. code-block:: bash
+
+   $ brew install homebrew/science/hdf5
+
+
 Get and run these tutorials
 ===========================
 
