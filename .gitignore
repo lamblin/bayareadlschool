@@ -178,3 +178,9 @@ TSWLatexianTemp*
 
 # KBibTeX
 *~[0-9]*
+
+# ipynb checkpoints
+.ipynb_checkpoints
+
+# Python3
+__pycache__
